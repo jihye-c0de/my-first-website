@@ -1,6 +1,9 @@
 # MCP settings
 .mcp.json
 
+# Local prompt notes
+프롬프트.txt
+
 # Claude local settings
 .claude/
 
