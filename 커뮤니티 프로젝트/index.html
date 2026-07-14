@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>최애를 소개합니다 - 소설/웹툰 커뮤니티</title>
+<style>
+  :root {
+    --bg: #FBF6EC;
+    --bg-secondary: #F3EBDD;
+    --card-bg: #FFFFFF;
+    --text-primary: #3A2E22;
+    --text-secondary: #7A6C58;
+    --text-muted: #B0A28E;
+    --accent: #E8894F;
+    --accent-light: #FBD9BE;
+    --accent-dark: #C96B33;
+    --border: #E8DFC9;
+    --shadow: 0 4px 16px rgba(58,46,34,0.08);
+  }
+  [data-theme="dark"] {
+    --bg: #1E1B16;
+    --bg-secondary: #27231C;
+    --card-bg: #2C2822;
+    --text-primary: #F3EAD9;
+    --text-secondary: #C9BBA0;
+    --text-muted: #8A7C64;
+    --accent: #FF9C6B;
+    --accent-light: #4A3826;
+    --accent-dark: #FFB68C;
+    --border: #3A342A;
+    --shadow: 0 4px 16px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    transition: background 0.25s ease, color 0.25s ease;
+    padding-bottom: 70px;
+  }
+  a { text-decoration: none; color: inherit; }
+  h1, h2, h3 { margin: 0; }
+  button { font-family: inherit; cursor: pointer; border: none; }
+
+  /* Header */
+  .site-header {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 20px;
+  }
+  .menu-toggle {
+    display: none;
+    background: none; font-size: 20px; color: var(--text-primary);
+    padding: 4px 8px; border-radius: 8px;
+  }
+  .logo {
+    font-size: 19px; font-weight: 700; color: var(--accent-dark);
+    white-space: nowrap;
+  }
+  .search-box { flex: 1; max-width: 420px; }
+  .search-box input {
+    width: 100%; padding: 9px 14px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--bg-secondary);
+    color: var(--text-primary); font-size: 14px;
+  }
+  .header-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  #theme-toggle {
+    background: var(--bg-secondary); width: 36px; height: 36px; border-radius: 50%;
+    font-size: 16px; display: flex; align-items: center; justify-content: center;
+  }
+  .btn-ghost, .btn-primary {
+    padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; white-space: nowrap;
+  }
+  .btn-ghost { background: none; color: var(--text-secondary); }
+  .btn-primary { background: var(--accent); color: #fff; }
+
+  /* Layout */
+  .layout { max-width: 1200px; margin: 0 auto; display: flex; gap: 24px; padding: 20px; align-items: flex-start; }
+
+  .sidebar {
+    width: 220px; flex-shrink: 0; position: sticky; top: 80px;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 16px;
+  }
+  .sidebar nav { display: flex; flex-direction: column; gap: 4px; }
+  .sidebar nav a {
+    padding: 10px 12px; border-radius: 8px; font-size: 14px; color: var(--text-secondary); font-weight: 500;
+  }
+  .sidebar nav a.active, .sidebar nav a:hover { background: var(--accent-light); color: var(--accent-dark); }
+  .access-note {
+    margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border);
+    font-size: 12px; color: var(--text-muted); line-height: 1.7;
+  }
+  .access-note strong { color: var(--text-secondary); }
+
+  main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
+  section h2 {
+    font-size: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  section h2::before { content: ''; width: 4px; height: 16px; background: var(--accent); border-radius: 2px; }
+
+  /* Post cards */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .post-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    box-shadow: var(--shadow); transition: transform 0.15s ease;
+  }
+  .post-card:hover { transform: translateY(-3px); }
+  .cover-placeholder {
+    height: 140px; background: linear-gradient(135deg, var(--accent-light), var(--bg-secondary));
+    display: flex; align-items: center; justify-content: center; font-size: 40px;
+  }
+  .post-body { padding: 12px 14px 14px; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+  .tag { font-size: 11px; background: var(--bg-secondary); color: var(--text-secondary); padding: 2px 8px; border-radius: 10px; }
+  .post-title { font-size: 14px; font-weight: 600; margin: 4px 0 8px; line-height: 1.4; }
+  .rating { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .stars-wrap { position: relative; display: inline-block; font-size: 15px; line-height: 1; }
+  .stars-bg { color: var(--border); }
+  .stars-fg { position: absolute; top: 0; left: 0; overflow: hidden; white-space: nowrap; color: var(--accent); }
+  .score { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+  .meta { font-size: 11.5px; color: var(--text-muted); }
+
+  /* Spoiler demo */
+  .comment-list { display: flex; flex-direction: column; gap: 10px; }
+  .comment {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px 14px; font-size: 13.5px; display: flex; justify-content: space-between; gap: 10px;
+  }
+  .comment .best-badge {
+    font-size: 10.5px; background: var(--accent); color: #fff; padding: 2px 7px; border-radius: 8px; margin-right: 6px;
+  }
+  .spoiler-text {
+    cursor: pointer; border-radius: 6px; padding: 2px 4px;
+    filter: blur(5px); user-select: none; transition: filter 0.2s ease; background: var(--bg-secondary);
+  }
+  .spoiler-text.revealed { filter: none; user-select: text; background: none; }
+  .spoiler-hint { font-size: 11px; color: var(--text-muted); flex-shrink: 0; white-space: nowrap; }
+
+  /* Bookshelf */
+  .tab-buttons { display: flex; gap: 8px; margin-bottom: 14px; }
+  .tab-btn {
+    padding: 7px 16px; border-radius: 18px; font-size: 13px; font-weight: 600;
+    background: var(--bg-secondary); color: var(--text-secondary);
+  }
+  .tab-btn.active { background: var(--accent); color: #fff; }
+  .shelf-panel { display: none; }
+  .shelf-panel.active { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 14px; }
+  .shelf-item {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+    font-size: 13px; display: flex; gap: 10px; align-items: center;
+  }
+  .shelf-cover { width: 42px; height: 56px; border-radius: 6px; background: var(--accent-light); flex-shrink: 0; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .shelf-info b { display: block; margin-bottom: 3px; }
+  .shelf-info span { color: var(--text-muted); font-size: 11.5px; }
+
+  /* Taste graph */
+  .taste-graph { display: flex; flex-direction: column; gap: 12px; max-width: 520px; }
+  .taste-row { display: grid; grid-template-columns: 100px 1fr 40px; align-items: center; gap: 10px; font-size: 13px; }
+  .taste-bar-bg { background: var(--bg-secondary); border-radius: 8px; height: 12px; overflow: hidden; }
+  .taste-bar-fg { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-dark)); border-radius: 8px; }
+  .taste-row span:last-child { color: var(--text-secondary); font-weight: 600; text-align: right; }
+
+  /* Policy */
+  .policy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 14px; }
+  .policy-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
+  }
+  .policy-card h3 { font-size: 13.5px; color: var(--accent-dark); margin-bottom: 8px; }
+  .policy-card ul { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.8; }
+
+  footer {
+    max-width: 1200px; margin: 20px auto 0; padding: 20px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-muted); text-align: center;
+  }
+
+  /* Bottom tab (mobile) */
+  .bottom-tab {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+    background: var(--card-bg); border-top: 1px solid var(--border);
+    justify-content: space-around; padding: 8px 0 10px;
+  }
+  .bottom-tab a { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10.5px; color: var(--text-muted); }
+  .bottom-tab a.active { color: var(--accent-dark); }
+  .bottom-tab a .icon { font-size: 18px; }
+
+  @media (max-width: 860px) {
+    .menu-toggle { display: block; }
+    .search-box { display: none; }
+    .sidebar {
+      position: fixed; top: 0; left: 0; height: 100vh; width: 240px; z-index: 100;
+      transform: translateX(-100%); transition: transform 0.25s ease; border-radius: 0;
+    }
+    .sidebar.open { transform: translateX(0); box-shadow: var(--shadow); }
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 90;
+    }
+    .sidebar-overlay.open { display: block; }
+    .bottom-tab { display: flex; }
+    body { padding-bottom: 66px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <button class="menu-toggle" id="menu-toggle" aria-label="메뉴 열기">☰</button>
+    <a href="#home" class="logo">📚 최애를 소개합니다</a>
+    <div class="search-box"><input type="text" placeholder="작품, 태그 검색"></div>
+    <div class="header-actions">
+      <button id="theme-toggle" aria-label="다크모드 전환">🌙</button>
+      <button class="btn-ghost">로그인</button>
+      <button class="btn-primary">회원가입</button>
+    </div>
+  </div>
+</header>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav>
+      <a href="#home" class="active">🏠 홈</a>
+      <a href="#novel">📖 소설</a>
+      <a href="#webtoon">🎨 웹툰</a>
+      <a href="#ranking">🏆 랭킹</a>
+      <a href="#bookshelf">🗂️ 나의 책장</a>
+      <a href="#mypage">👤 마이페이지</a>
+    </nav>
+    <div class="access-note">
+      <p><strong>비회원</strong>: 게시물/댓글 열람만 가능</p>
+      <p><strong>회원</strong>: 별점·댓글·좋아요·책장·추천 이용 가능</p>
+    </div>
+  </aside>
+
+  <main>
+    <section id="home">
+      <h2>실시간 인기 작품</h2>
+      <div class="card-grid">
+
+        <article class="post-card">
+          <div class="cover-placeholder">📕</div>
+          <div class="post-body">
+            <div class="tags"><span class="tag">#로판</span><span class="tag">#회귀</span></div>
+            <div class="post-title">이번 생은 대공비마마</div>
+            <div class="rating">
+              <span class="stars-wrap">
+                <span class="stars-bg">★★★★★</span>
+                <span class="stars-fg" style="width:90%">★★★★★</span>
+              </span>
+              <span class="score">4.5</span>
+            </div>
+            <div class="meta">❤️ 1.2k · 💬 340</div>
+          </div>
+        </article>
+
+        <article class="post-card">
+          <div class="cover-placeholder">🎨</div>
+          <div class="post-body">
+            <div class="tags"><span class="tag">#판타지</span><span class="tag">#액션</span></div>
+            <div class="post-title">달빛 아래 검사</div>
+            <div class="rating">
+              <span class="stars-wrap">
+                <span class="stars-bg">★★★★★</span>
+                <span class="stars-fg" style="width:70%">★★★★★</span>
+              </span>
+              <span class="score">3.5</span>
+            </div>
+            <div class="meta">❤️ 890 · 💬 210</div>
+          </div>
+        </article>
+
+        <article class="post-card">
+          <div class="cover-placeholder">📕</div>
+          <div class="post-body">
+            <div class="tags"><span class="tag">#현대물</span><span class="tag">#힐링</span></div>
+            <div class="post-title">퇴근 후 카페 사장</div>
+            <div class="rating">
+              <span class="stars-wrap">
+                <span class="stars-bg">★★★★★</span>
+                <span class="stars-fg" style="width:100%">★★★★★</span>
+              </span>
+              <span class="score">5.0</span>
+            </div>
+            <div class="meta">❤️ 2.4k · 💬 512</div>
+          </div>
+        </article>
+
+        <article class="post-card">
+          <div class="cover-placeholder">🎨</div>
+          <div class="post-body">
+            <div class="tags"><span class="tag">#미스터리</span><span class="tag">#스릴러</span></div>
+            <div class="post-title">붉은 우체통</div>
+            <div class="rating">
+              <span class="stars-wrap">
+                <span class="stars-bg">★★★★★</span>
+                <span class="stars-fg" style="width:82%">★★★★★</span>
+              </span>
+              <span class="score">4.1</span>
+            </div>
+            <div class="meta">❤️ 675 · 💬 98</div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="spoiler-demo">
+      <h2>스포일러 방지 댓글 미리보기</h2>
+      <div class="comment-list">
+        <div class="comment">
+          <span><span class="best-badge">BEST</span>이번 화 전개 정말 좋았어요! 다음 화도 기대됩니다 :)</span>
+          <span class="spoiler-hint">일반 댓글</span>
+        </div>
+        <div class="comment">
+          <span>드디어... <span class="spoiler-text" onclick="this.classList.toggle('revealed')">남주가 여주 정체를 알아채는 장면 나왔어요</span> 클릭해서 확인하세요</span>
+          <span class="spoiler-hint">👆 클릭 전까지 블라인드</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="bookshelf">
+      <h2>나의 책장</h2>
+      <div class="tab-buttons">
+        <button class="tab-btn active" onclick="showShelf('review', this)">독후감</button>
+        <button class="tab-btn" onclick="showShelf('paused', this)">읽기 중단</button>
+      </div>
+      <div class="shelf-panel active" id="shelf-review">
+        <div class="shelf-item">
+          <div class="shelf-cover">📕</div>
+          <div class="shelf-info"><b>이번 생은 대공비마마</b><span>완독 · 별점 4.5</span></div>
+        </div>
+        <div class="shelf-item">
+          <div class="shelf-cover">🎨</div>
+          <div class="shelf-info"><b>달빛 아래 검사</b><span>완독 · 별점 3.5</span></div>
+        </div>
+      </div>
+      <div class="shelf-panel" id="shelf-paused">
+        <div class="shelf-item">
+          <div class="shelf-cover">📕</div>
+          <div class="shelf-info"><b>붉은 우체통</b><span>32화에서 중단</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mypage">
+      <h2>마이페이지 · 취향 그래프</h2>
+      <div class="taste-graph">
+        <div class="taste-row"><span>로맨스판타지</span><div class="taste-bar-bg"><div class="taste-bar-fg" style="width:82%"></div></div><span>82%</span></div>
+        <div class="taste-row"><span>현대 로맨스</span><div class="taste-bar-bg"><div class="taste-bar-fg" style="width:64%"></div></div><span>64%</span></div>
+        <div class="taste-row"><span>액션/무협</span><div class="taste-bar-bg"><div class="taste-bar-fg" style="width:45%"></div></div><span>45%</span></div>
+        <div class="taste-row"><span>미스터리</span><div class="taste-bar-bg"><div class="taste-bar-fg" style="width:30%"></div></div><span>30%</span></div>
+      </div>
+    </section>
+
+    <section id="policy">
+      <h2>저작권 및 운영 정책</h2>
+      <div class="policy-grid">
+        <div class="policy-card">
+          <h3>표지 이미지</h3>
+          <ul>
+            <li>관리자가 공식 표지 등록/관리</li>
+            <li>사용자 업로드 금지</li>
+          </ul>
+        </div>
+        <div class="policy-card">
+          <h3>사용자 사진</h3>
+          <ul>
+            <li>독후감·리뷰용 개인 사진만 허용</li>
+            <li>팬아트, 메모 캡처 등 한정</li>
+          </ul>
+        </div>
+        <div class="policy-card">
+          <h3>원문 복제 금지</h3>
+          <ul>
+            <li>타 사이트 원문 대량 복붙 금지</li>
+            <li>적발 시 신고 대상</li>
+          </ul>
+        </div>
+        <div class="policy-card">
+          <h3>관리자 기능</h3>
+          <ul>
+            <li>공식 표지 등록, 신고 처리</li>
+            <li>회원 제재, 태그 사전 관리</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  참고 사이트: 교보문고 전자도서관 · 카카오페이지 · 네이버 시리즈 · 라프텔 · 굿리즈
+</footer>
+
+<nav class="bottom-tab">
+  <a href="#home" class="active"><span class="icon">🏠</span>홈</a>
+  <a href="#novel"><span class="icon">📖</span>소설</a>
+  <a href="#webtoon"><span class="icon">🎨</span>웹툰</a>
+  <a href="#bookshelf"><span class="icon">🗂️</span>책장</a>
+  <a href="#mypage"><span class="icon">👤</span>MY</a>
+</nav>
+
+<script>
+  // 다크모드 토글
+  const themeBtn = document.getElementById('theme-toggle');
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeBtn.textContent = '☀️';
+  }
+  themeBtn.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      themeBtn.textContent = '🌙';
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeBtn.textContent = '☀️';
+      localStorage.setItem('theme', 'dark');
+    }
+  });
+
+  // 모바일 사이드바 슬라이드 메뉴
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const menuToggle = document.getElementById('menu-toggle');
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+  menuToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+  overlay.addEventListener('click', closeSidebar);
+  sidebar.querySelectorAll('a').forEach(a => a.addEventListener('click', closeSidebar));
+
+  // 나의 책장 탭 전환
+  function showShelf(name, btn) {
+    document.querySelectorAll('.shelf-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('shelf-' + name).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
