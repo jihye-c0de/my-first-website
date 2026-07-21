@@ -58,13 +58,13 @@
 - description: "Supabase와 React로 구현한 실시간 커뮤니티"
 - tech_stack: ["React", "Supabase", "PostgreSQL", "CSS3"]
 - detail_url: "https://jihye-c0de.github.io/my_favorite_introduce/"
-- thumbnail_url: "https://api.microlink.io/?url=https://jihye-c0de.github.io/my_favorite_introduce/&screenshot=true&meta=false&embed=screenshot.url" (image.thum.io 무료 티어가 응답하지 않아 microlink.io로 대체)
+- thumbnail_url: "https://api.microlink.io/?url=https://jihye-c0de.github.io/my_favorite_introduce/&screenshot=true&meta=false&embed=screenshot.url&waitUntil=networkidle0" (image.thum.io 무료 티어가 응답하지 않아 microlink.io로 대체, waitUntil=networkidle0으로 로딩 스피너 대신 실제 콘텐츠 캡처)
 
 프로젝트 2 (Lesson3):
 - title: "ate SNS"
 - description: "모바일 퍼스트 소셜 미디어 웹앱"
 - tech_stack: ["React", "Supabase", "Unsplash API", "MUI"]
 - detail_url: "https://jihye-c0de.github.io/ate_sns/"
-- thumbnail_url: "https://api.microlink.io/?url=https://jihye-c0de.github.io/ate_sns/&screenshot=true&meta=false&embed=screenshot.url" (image.thum.io 무료 티어가 응답하지 않아 microlink.io로 대체)
+- thumbnail_url: "https://api.microlink.io/?url=https://jihye-c0de.github.io/ate_sns/&screenshot=true&meta=false&embed=screenshot.url&waitUntil=networkidle0" (image.thum.io 무료 티어가 응답하지 않아 microlink.io로 대체, waitUntil=networkidle0으로 로딩 스피너 대신 실제 콘텐츠 캡처)
 
 == Projects DB 구조 정리 완료 ==
