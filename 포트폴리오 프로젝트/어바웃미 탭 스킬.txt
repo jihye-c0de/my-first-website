@@ -1,0 +1,34 @@
+About Me 탭에 스킬 섹션을 추가해줘:
+
+주력 스킬 (5종) — 포트폴리오 기획서 확정 내용 반영:
+- Illustrator: 80% (실무 툴)
+- Photoshop: 80% (실무 툴)
+- Figma: 70% (실무 툴)
+- Rhino: 80% (3D 감각)
+- React(코딩): 60% (빠르게 성장 중)
+
+스킬 표시 구조:
+- 기술명 + 숙련도 퍼센트 바 + 호버 시 간단한 코멘트 노출 (카드형, Projects 섹션과 동일한 카드+호버 톤 재사용)
+- Home 탭의 Skill Tree 섹션과 동일한 SkillCard 컴포넌트 및 데이터(src/data/skills-data.js)를 그대로 재사용해 일관성 유지
+- 별도 카테고리 그룹핑은 사용하지 않음 (5개 모두 "디자인 툴 + 코드"를 한 번에 보여주는 것이 차별점이므로 구분하지 않고 한 그리드에 표시)
+
+구현 요구사항:
+```javascript
+// src/data/skills-data.js
+export const SKILLS = [
+  { name: 'Illustrator', level: 80, note: '실무 툴' },
+  { name: 'Photoshop', level: 80, note: '실무 툴' },
+  { name: 'Figma', level: 70, note: '실무 툴' },
+  { name: 'Rhino', level: 80, note: '3D 감각' },
+  { name: 'React', level: 60, note: '빠르게 성장 중' },
+];
+```
+
+UI 요구사항:
+- 프로그래스 바는 애니메이션 효과 포함 (width transition 0.6s ease)
+- 반응형 그리드 레이아웃 (모바일: 1열, 태블릿: 2열, 데스크탑: 3열)
+- 카테고리별 색상 구분/스킬 추가 버튼/확장 기능은 필요 없음 (신입 포지셔닝에 맞춰 고정된 5종만 노출)
+
+Home 탭 연동:
+- 이미 Home 탭 Skill Tree 섹션에 동일한 5종 스킬이 노출되어 있음 (src/components/landing/skill-tree-section.jsx)
+- About Me 탭에서는 같은 데이터를 그대로 재사용하므로 별도의 정렬/상위 N개 선택 로직은 불필요
